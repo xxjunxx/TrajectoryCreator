@@ -26,6 +26,9 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	void Init();
+
+	void CreateTrajectory();
 	
 	void SetupMeshesAndMaterial();
 
@@ -63,6 +66,9 @@ public:
 	UMaterial* Material;
 
 private:
+	UPROPERTY(EditAnywhere)
+	int32 NrOfMeshes;
+
 	int32 currentPath = 1;
 	TArray<FTransform> PosArray1;
 	TArray<FTransform> PosArray2;
