@@ -10,7 +10,9 @@ ATrajectoryActor::ATrajectoryActor()
 	NrOfMeshes = 5000;
 
 	SetupMeshesAndMaterial();
-
+	
+	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
+	
 	InstancedStaticMesh = CreateDefaultSubobject<UInstancedStaticMeshComponent>(TEXT("InstacedStaticMeshComponent"));
 
 	InstancedStaticMesh->SetStaticMesh(Mesh);
@@ -19,8 +21,9 @@ ATrajectoryActor::ATrajectoryActor()
 
 	InstancedStaticMesh->SetupAttachment(GetRootComponent());
 
-	InstancedStaticMesh->SetCullDistances(50, 1000);
+	SetupTrajectoryPath();
 
+	CreateTrajectory();
 
 
 }
@@ -31,9 +34,7 @@ void ATrajectoryActor::BeginPlay()
 {
 	Super::BeginPlay();
 
-	SetupTrajectoryPath();
-
-	CreateTrajectory();
+	
 }
 	
 // Called every frame

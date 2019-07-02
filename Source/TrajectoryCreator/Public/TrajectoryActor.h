@@ -49,23 +49,23 @@ public:
 	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Trajectory Setting")
 	//UStaticMesh * StaticMesh;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Trajectory Setting")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Trajectory Setting")
 	FLinearColor Color = FLinearColor(0, 1, 0, 1);
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Trajectory Setting")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Trajectory Setting")
 	FVector Size = FVector(1, 1, 1);
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Trajectory Setting")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Trajectory Setting")
 	UInstancedStaticMeshComponent * InstancedStaticMesh;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Trajectory Setting")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Trajectory Setting")
 	UMaterialInstanceDynamic* DynamicMaterial;
 
 	UStaticMesh* Mesh;
 	UMaterial* Material;
 
 private:
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditDefaultsOnly)
 	int32 NrOfMeshes;
 
 	int32 currentPath = 1;
