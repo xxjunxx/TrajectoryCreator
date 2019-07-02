@@ -7,11 +7,22 @@ ATrajectoryActor::ATrajectoryActor()
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	NrOfMeshes = 100;
+	NrOfMeshes = 5000;
 
 	SetupMeshesAndMaterial();
 
-	SetupComponents();
+	InstancedStaticMesh = CreateDefaultSubobject<UInstancedStaticMeshComponent>(TEXT("InstacedStaticMeshComponent"));
+
+	InstancedStaticMesh->SetStaticMesh(Mesh);
+
+	InstancedStaticMesh->SetMaterial(0, Material);
+
+	InstancedStaticMesh->SetupAttachment(GetRootComponent());
+
+	InstancedStaticMesh->SetCullDistances(50, 1000);
+
+
+
 }
 
 
@@ -20,6 +31,9 @@ void ATrajectoryActor::BeginPlay()
 {
 	Super::BeginPlay();
 
+	SetupTrajectoryPath();
+
+	CreateTrajectory();
 }
 	
 // Called every frame
@@ -27,15 +41,31 @@ void ATrajectoryActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+
+
 }
 
-void ATrajectoryActor::Init()
+
+
+void ATrajectoryActor::SetupMeshesAndMaterial()
 {
-	
+	static ConstructorHelpers::FObjectFinder<UStaticMesh>MeshAsset(TEXT("StaticMesh'/TrajectoryCreator/SM_Box1cm.SM_Box1cm'"));
 
-	SetupTrajectoryPath();
+	Mesh = MeshAsset.Object;
 
-	
+	static ConstructorHelpers::FObjectFinder<UMaterial> MaterialAsset(TEXT("Material'/TrajectoryCreator/M_TrajectoryDynamicMaterial.M_TrajectoryDynamicMaterial'"));
+	Material = MaterialAsset.Object;
+}
+
+void ATrajectoryActor::SetupTrajectoryPath()
+{
+
+	for (int i = 0; i < NrOfMeshes; i++)
+	{
+		PosArray1.Add(FTransform(FRotator(0, 0, 0), FVector(i * 3, 0, 0), Size));
+		PosArray2.Add(FTransform(FRotator(0, 0, 0), FVector(0, i * 3, 0), Size));
+		PosArray3.Add(FTransform(FRotator(0, 0, 0), FVector(0, 0, i * 3), Size));
+	}
 }
 
 void ATrajectoryActor::CreateTrajectory()
@@ -46,20 +76,7 @@ void ATrajectoryActor::CreateTrajectory()
 	}
 }
 
-void ATrajectoryActor::SetupMeshesAndMaterial()
-{
-	static ConstructorHelpers::FObjectFinder<UStaticMesh>MeshAsset1(TEXT("StaticMesh'/Game/StarterContent/Props/MaterialSphere.MaterialSphere'"));
-	static ConstructorHelpers::FObjectFinder<UStaticMesh>MeshAsset2(TEXT("StaticMesh'/Game/StarterContent/Props/SM_Rock.SM_Rock'"));
-	static ConstructorHelpers::FObjectFinder<UStaticMesh>MeshAsset3(TEXT("StaticMesh'/Game/StarterContent/Props/SM_Stairs.SM_Stairs'"));
-	static ConstructorHelpers::FObjectFinder<UStaticMesh>MeshAsset4(TEXT("StaticMesh'/Game/StarterContent/Props/SM_Statue.SM_Statue'"));
-	Meshes.Add(MeshAsset1.Object);
-	Meshes.Add(MeshAsset2.Object);
-	Meshes.Add(MeshAsset3.Object);
-	Meshes.Add(MeshAsset4.Object);
 
-	static ConstructorHelpers::FObjectFinder<UMaterial> MaterialAsset(TEXT("Material'/Game/StarterContent/Materials/M_Basic_Floor.M_Basic_Floor'"));
-	Material = MaterialAsset.Object;
-}
 
 void ATrajectoryActor::UpdateTrajectoryPath(int32 currentPath)
 {
@@ -94,16 +111,7 @@ void ATrajectoryActor::ChangeTrajectoryPath()
 	UpdateTrajectoryPath(currentPath);
 }
 
-void ATrajectoryActor::SetupTrajectoryPath() 
-{
-	
-	for (int i = 0; i < NrOfMeshes; i++)
-	{
-		PosArray1.Add(FTransform(FRotator(0, 0, 0), FVector(i * 100, 0, 0), Size));
-		PosArray2.Add(FTransform(FRotator(0, 0, 0), FVector(0, i * 100, 0), Size));
-		PosArray3.Add(FTransform(FRotator(0, 0, 0), FVector(0, 0, i * 100), Size));
-	}
-}
+
 
 void ATrajectoryActor::ChangeColor() {
 	Color = FLinearColor(FMath::RandRange(0, 1), FMath::RandRange(0, 1), FMath::RandRange(0, 1), 1);
@@ -134,43 +142,28 @@ void ATrajectoryActor::ChangeSize()
 
 void ATrajectoryActor::ChangeMesh() 
 {
-	int32 MeshType = FMath::RandRange(1, 4);
-	switch (MeshType)
-	{
-	case 1:
-		InstancedStaticMesh->SetStaticMesh(Meshes[0]);
-		InstancedStaticMesh->SetMaterial(0, Material);
-		break;
-	case 2:
-		InstancedStaticMesh->SetStaticMesh(Meshes[1]);
-		InstancedStaticMesh->SetMaterial(0, Material);
-		break;
-	case 3:
-		InstancedStaticMesh->SetStaticMesh(Meshes[2]);
-		InstancedStaticMesh->SetMaterial(0, Material);
-		break;
-	case 4:
-		InstancedStaticMesh->SetStaticMesh(Meshes[3]);
-		InstancedStaticMesh->SetMaterial(0, Material);
-		break;
-	default:
-		break;
-	}
+	//int32 MeshType = FMath::RandRange(1, 4);
+	//switch (MeshType)
+	//{
+	//case 1:
+	//	InstancedStaticMesh->SetStaticMesh(Meshes[0]);
+	//	InstancedStaticMesh->SetMaterial(0, Material);
+	//	break;
+	//case 2:
+	//	InstancedStaticMesh->SetStaticMesh(Meshes[1]);
+	//	InstancedStaticMesh->SetMaterial(0, Material);
+	//	break;
+	//case 3:
+	//	InstancedStaticMesh->SetStaticMesh(Meshes[2]);
+	//	InstancedStaticMesh->SetMaterial(0, Material);
+	//	break;
+	//case 4:
+	//	InstancedStaticMesh->SetStaticMesh(Meshes[3]);
+	//	InstancedStaticMesh->SetMaterial(0, Material);
+	//	break;
+	//default:
+	//	break;
+	//}
 }
 
 
-
-void ATrajectoryActor::SetupComponents()
-{
-	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
-	InstancedStaticMesh = CreateDefaultSubobject<UHierarchicalInstancedStaticMeshComponent>(TEXT("InstacedStaticMeshComponent"));
-
-	InstancedStaticMesh->SetStaticMesh(Meshes[1]);
-
-	
-	InstancedStaticMesh->SetMaterial(0, Material);
-
-	InstancedStaticMesh->SetupAttachment(GetRootComponent());
-
-	InstancedStaticMesh->SetCullDistances(50, 1000);
-}

@@ -14,9 +14,12 @@ class TRAJECTORYCREATOR_API ATrajectoryActor : public AActor
 {
 	GENERATED_BODY()
 	
+	
+
 public:	
 	// Sets default values for this actor's properties
 	ATrajectoryActor();
+
 
 protected:
 	// Called when the game starts or when spawned
@@ -26,13 +29,9 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	void Init();
-
 	void CreateTrajectory();
 	
 	void SetupMeshesAndMaterial();
-
-	void SetupComponents();
 
 	void SetupTrajectoryPath();
 
@@ -54,15 +53,15 @@ public:
 	FLinearColor Color = FLinearColor(0, 1, 0, 1);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Trajectory Setting")
-	FVector Size = FVector(0.1, 0.1, 0.1);
+	FVector Size = FVector(1, 1, 1);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Trajectory Setting")
-	UHierarchicalInstancedStaticMeshComponent * InstancedStaticMesh;
+	UInstancedStaticMeshComponent * InstancedStaticMesh;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Trajectory Setting")
 	UMaterialInstanceDynamic* DynamicMaterial;
 
-	TArray<UStaticMesh*> Meshes;
+	UStaticMesh* Mesh;
 	UMaterial* Material;
 
 private:
